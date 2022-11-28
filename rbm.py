@@ -183,7 +183,7 @@ class RBM(ESG):
                 # we generate a random vector of 0 and 1
                 v = np.random.binomial(1, 0.5, size=self.n_visible)
                 generated_samples_i = np.array([v])
-                for _ in len(self.data-1): # correspond of the length of the historical data we want to generate train + test
+                for _ in range(len(self.data-1)): # correspond of the length of the historical data we want to generate train + test
                     for _ in range(K): # thermalisation
                         h = sigmoid(np.dot(v, self.W) + self.b)
                         h = np.random.binomial(1, h) # forward pass
