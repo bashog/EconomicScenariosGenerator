@@ -189,7 +189,7 @@ class RBM(ESG):
                         h = np.random.binomial(1, h) # forward pass
                         v = sigmoid(np.dot(h, self.W.T) + self.a)
                         v = np.random.binomial(1, v) # backward pass
-                    generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0)
+                    generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0) if generated_samples_i is not None else np.array([v])
 
             elif method=='simple':
                 type_unpack = 'train'
