@@ -98,12 +98,13 @@ class RBM(ESG):
     
     def qq_plot(self):
         '''QQ plot for each variable comparing the real data and the generated data'''
-        fig, axes = plt.subplots(self.ncols, 1, figsize=(5, 5*self.ncols))
+        fig, axes = plt.subplots(self.ncols//2 + 1, 2, figsize=(5*self.ncols, 5*self.ncols))
         for i, col in enumerate(self.columns):
             pp_array1 = sm.ProbPlot(self.data.iloc[:,i])
             pp_array2 = sm.ProbPlot(self.output.iloc[:,i])
-            pp_array2.qqplot(line='45', other=pp_array1, xlabel='Output Quantiles'+col, ylabel='Real Quantiles'+col, ax=axes[i])
-        plt.show()        
+            pp_array2.qqplot(line='45', other=pp_array1, xlabel='Output Quantiles'+col, ylabel='Real Quantiles'+col, ax=axes[i//2, i%2])
+        plt.show()
+       
 
     
     def train(self, epochs=1000, lr=0.01, batch_size=10, k_steps=1,):
