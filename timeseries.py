@@ -87,7 +87,7 @@ class TimeSeries:
   def statistics(self):
     '''Calculate the main statistics of the returns'''
     if self.main_stat is None:
-      summary_stat = None
+      summary_stat = None 
       for symbol in self.symbols:
         summary_stat = pd.concat([summary_stat, summary_statistics(self.returns[symbol], symbol)], axis=1) if summary_stat is not None else summary_statistics(self.returns[symbol], symbol)
       self.main_stat = summary_stat
@@ -101,7 +101,7 @@ class TimeSeries:
     plt.title('Historical correlation')
     plt.show()
   
-  def bootstrap(self, scenarios:int, test_date, plot_from:str, window=5):
+  def bootstrap_esg(self, scenarios:int, test_date, plot_from:str, window=5):
     '''Generate bootstrap samples'''
     self.bts = Bootstrap(self.returns, test_date, scenarios)
     self.bts.pre_processing()
@@ -110,7 +110,7 @@ class TimeSeries:
     self.bts.correlation()
     self.bts.plot_returns(plot_from, window)
   
-  def rbm(self, scenarios:int, epochs:int, lr:float, K:int, method_generate:str, test_date, plot_from:str, windows=10):
+  def rbm_esg(self, scenarios:int, epochs:int, lr:float, K:int, method_generate:str, test_date, plot_from:str, windows=10):
     '''Generate RBM samples'''
     self.rbm = RBM(self.returns, test_date, scenarios)
     self.rbm.pre_processing()

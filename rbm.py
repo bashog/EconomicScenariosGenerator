@@ -62,20 +62,26 @@ class RBM(ESG):
         return array_real
 
 
-    def unpack_data(self, array:np.array):
+    def unpack_data(self, array:np.array, type_index:str):
         '''numpy to dataframe'''
-        data = pd.DataFrame(array, columns=self.data.columns, index=self.index)
+        if type_index == 'train':
+            index = self.data_train.index
+        elif type_index == 'test':
+            index = self.data_test.index
+        elif type_index == 'all':
+            index = self.data.index
+        data = pd.DataFrame(array, columns=self.data.columns, index=index)
         return data
 
 
     def pre_processing(self):
         '''
-        Pre-processing data
+        Pre-processing data train
         It takes the real data and encode it into binary by setting the min and max values used also for the encoding
         It initialises the weights and biases
         '''
         # convert data into numpy and encode them
-        data_pack = self.data.to_numpy()
+        data_pack = self.data_train.to_numpy()
         self.min = np.amin(data_pack,axis=0)
         self.max = np.amax(data_pack,axis=0)
         self.n_visible = 16 * self.ncols
@@ -96,13 +102,14 @@ class RBM(ESG):
         for i, col in enumerate(self.columns):
             pp_array1 = sm.ProbPlot(self.data.iloc[:,i])
             pp_array2 = sm.ProbPlot(self.output.iloc[:,i])
-            pp_array1.qqplot(line='45', other=pp_array2, xlabel='Real Quantiles'+col, ylabel='Output Quantiles'+col, ax=axes[i])
+            pp_array2.qqplot(line='45', other=pp_array1, xlabel='Output Quantiles'+col, ylabel='Real Quantiles'+col, ax=axes[i])
         plt.show()        
 
     
     def train(self, epochs=1000, lr=0.01, batch_size=10, k_steps=1,):
         '''
         k contrastive divergence method with batch training
+        The training is done on data train
 
         Parameters:
         epochs: number of epochs corresponding of the thermalisation time
@@ -150,7 +157,7 @@ class RBM(ESG):
             v = np.random.binomial(1, v)
             self.output = np.concatenate((self.output, np.array([v])), axis=0) if self.output is not None else np.array([v])
         self.output = self.unencoding(self.output)
-        self.output = self.unpack_data(self.output)
+        self.output = self.unpack_data(self.output,'train')
         self.qq_plot()
 
         print('Train done')
@@ -161,25 +168,25 @@ class RBM(ESG):
         Generate new data
 
         Parameters:
-        method: 'simple' for simple generation by sampling with the historical distribution
-                'thermalisation' for generation new data different from the historical data. It successively took the precendent value and thermalise it for K steps
+        method: 'simple' for simple generation by sampling with the historical distribution of data train
+                'thermalisation' for generation new data different from the historical data train. It successively took the precendent value and thermalise it for K steps
         K: thermalisation time for the 'thermalisation' method to generate new data
         '''
         sigmoid = lambda x: 1 / (1 + np.exp(-x))
         self.generated_samples = []
 
         for _ in trange(self.scenarios): # for each scenario
-            generated_samples_i = [] # list of generated samples for the scenario i
 
             if method=='thermalisation':
-                v = self.input[0] # take the first value of the historical data
-                for _ in trange(len(self.input)-1): # correspond of the length of the historical data we want to generate
+                v = self.input[0] # take the first value of the historical data train
+                generated_samples_i = np.array([v])
+                for _ in trange(len(self.data)-1, leave=False): # correspond of the length of the historical data we want to generate train + test
                     for _ in range(K): # thermalisation
                         h = sigmoid(np.dot(v, self.W) + self.b)
                         h = np.random.binomial(1, h) # forward pass
                         v = sigmoid(np.dot(h, self.W.T) + self.a)
                         v = np.random.binomial(1, v) # backward pass
-                    generated_samples_i.append(v)
+                    generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0)
 
             elif method=='simple':
                 generated_samples_i = None
@@ -194,7 +201,7 @@ class RBM(ESG):
             self.generated_samples.append(generated_samples_i)
         
         self.generated_samples = [self.unencoding(self.generated_samples[i]) for i in range(self.scenarios)] # unencoding
-        self.generated_samples = [self.unpack_data(self.generated_samples[i]) for i in range(self.scenarios)] # unpack data to get a dataframe
+        self.generated_samples = [self.unpack_data(self.generated_samples[i], 'all') for i in range(self.scenarios)] # unpack data to get a dataframe
 
     print('Generate data done')
     
