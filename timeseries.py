@@ -110,12 +110,12 @@ class TimeSeries:
     self.bts.correlation()
     self.bts.plot_returns(plot_from, window)
   
-  def rbm(self, scenarios:int, epochs:int, lr:float, K:int, test_date, plot_from:str, windows=10):
+  def rbm(self, scenarios:int, epochs:int, lr:float, K:int, method_generate:str, test_date, plot_from:str, windows=10):
     '''Generate RBM samples'''
     self.rbm = RBM(self.returns, test_date, scenarios)
     self.rbm.pre_processing()
     self.rbm.train(epochs, lr)
-    self.rbm.generate('simple', K)
+    self.rbm.generate(method_generate, K)
     self.rbm.correlation()
     self.rbm.plot_returns(plot_from, windows)
   
