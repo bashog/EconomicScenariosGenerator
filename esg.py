@@ -113,14 +113,18 @@ class ESG(ABC):
         print('Quantiles done')
 
     
-    def correlation(self):
+    def correlation(self, corr_of='generated'):
         ''' 
         Get the correlation matrix of bootstrap samples 
         The correlation matrix is computed by taking the average of the correlation matrix of each generated scenario 
         '''        
+        if corr_of == 'output':
+            samples = self.output
+        elif corr_of == 'generated':
+            samples = self.generated_samples
         if self.corr is None: # if the correlation matrix is not computed yet
             all_corr = []
-            for sample in self.generated_samples: # for each generated scenario
+            for sample in samples: # for each generated scenario
                 temp_samples = sample.copy()
                 temp_samples.columns = self.columns
                 all_corr.append(temp_samples.corr())

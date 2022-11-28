@@ -101,23 +101,27 @@ class TimeSeries:
     plt.title('Historical correlation')
     plt.show()
   
-  def bootstrap_esg(self, scenarios:int, test_date, plot_from:str, window=5):
+  def bootstrap_esg(self, scenarios:int, test_date, plot_from:str, windows=5):
     '''Generate bootstrap samples'''
     self.bts = Bootstrap(self.returns, test_date, scenarios)
     self.bts.pre_processing()
     self.bts.train()
     self.bts.generate()
     self.bts.correlation()
-    self.bts.plot_returns(plot_from, window)
+    self.bts.plot_returns(plot_from, windows)
   
   def rbm_esg(self, scenarios:int, epochs:int, lr:float, K:int, method_generate:str, test_date, plot_from:str, windows=10):
     '''Generate RBM samples'''
     self.rbm = RBM(self.returns, test_date, scenarios)
     self.rbm.pre_processing()
     self.rbm.train(epochs, lr)
+    '''
+    self.rbm.correlation(corr_of='output')
     self.rbm.generate(method_generate, K)
-    self.rbm.correlation()
+    self.rbm.correlation(corr_of='generated')
     self.rbm.plot_returns(plot_from, windows)
+    '''
+    
   
   
   

@@ -178,7 +178,8 @@ class RBM(ESG):
         for _ in trange(self.scenarios): # for each scenario
 
             if method=='thermalisation':
-                v = self.input[0] # take the first value of the historical data train
+                # we generate a random vector of 0 and 1
+                v = np.random.binomial(1, 0.5, size=self.n_visible)
                 generated_samples_i = np.array([v])
                 for _ in trange(len(self.data)-1, leave=False): # correspond of the length of the historical data we want to generate train + test
                     for _ in range(K): # thermalisation
