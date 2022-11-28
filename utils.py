@@ -82,6 +82,55 @@ def plot_returns(returns:pd.DataFrame, with_quantile:bool=True):
             ax[i, 1].axvline(q1, color='red', linestyle='dashed')
     plt.show()
 
+def plot_quantiles_esg(data:pd.DataFrame, data_train:pd.DataFrame, quantiles:list, windows:int, test_date:str, plot_from:str):
+    ''' 
+    Used to plot the quantiles returns from the generated datas or the output of the ESG
+    
+    Parameters:
+    data: pd.DataFrame
+        The hitorical returns of the assets
+    data_train: pd.DataFrame
+        The training data used to generate the historical quantiles to compare with the generated quantiles
+    quantiles: list
+        The list of quantiles for each asset from the generated data
+    window: int
+        The window for the rolling quantiles
+    '''
+    ncols = data.shape[1]
+    index = data.index
+    columns = data.columns
+
+
+    fig, ax = plt.subplots(ncols, 1, figsize=(15, 6*ncols))
+    for i, col in enumerate(columns):
+        sns.lineplot(x=index, y=data[col], ax=ax[i], color='blue', linewidth=1, label='Historical data')
+        ax[i].set_title('Evolution of '+ col +' over time')
+        ax[i].grid(True)
+
+        quantiles_i = quantiles[i].rolling(windows).mean().bfill() # rolling mean of the quantiles
+
+        # plot the quantiles
+        #sns.lineplot(x=temp_index, y=quantiles_i[col+'_q50'], ax=ax[i], color='green', linewidth=1)
+        sns.lineplot(x=index, y=quantiles_i[col+'_q10'], ax=ax[i], color='orange', linewidth=0.7,label='10% quantile')
+        sns.lineplot(x=index, y=quantiles_i[col+'_q90'], ax=ax[i], color='orange', linewidth=0.7, label='90% quantile')
+        sns.lineplot(x=index, y=quantiles_i[col+'_q2.5'], ax=ax[i], color='red', linewidth=0.7, label='2.5% quantile')
+        sns.lineplot(x=index, y=quantiles_i[col+'_q97.5'], ax=ax[i], color='red', linewidth=0.7, label='97.5% quantile')
+
+        # plot the historical quantile
+        ax[i].axhline(data_train[col].quantile(0.10), color='orange', linestyle='dashed', linewidth=2, label='Historical 10% quantile')
+        ax[i].axhline(data_train[col].quantile(0.90), color='orange', linestyle='dashed', linewidth=2, label='Historical 90% quantile')
+        ax[i].axhline(data_train[col].quantile(0.025), color='red', linestyle='dashed', linewidth=2, label='Historical 2.5% quantile')
+        ax[i].axhline(data_train[col].quantile(0.975), color='red', linestyle='dashed', linewidth=2, label='Historical 97.5% quantile')
+
+
+        ax[i].legend(bbox_to_anchor = (1.22, 0.6), loc='center right')
+
+        ax[i].axvline(x=pd.to_datetime(test_date, format='%Y-%m-%d'), color='k', linestyle='dashed', linewidth=2) # plot the test date line
+
+        ax[i].set_xlim([pd.to_datetime(plot_from, format='%Y-%m-%d'), index[-1]]) # set the x-axis limits to reduce the size of the plot to focus on the last part of the data
+
+    plt.show()
+
 
         
 

@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import coumpound_quantiles
+from utils import coumpound_quantiles, plot_quantiles_esg
 
 class ESG(ABC):
     ''' 
@@ -120,17 +120,23 @@ class ESG(ABC):
         '''        
         if corr_of == 'output':
             samples = self.output
+            self.corr = samples.corr()
+            self.corr = self.corr.loc[self.columns, self.columns] # reorder the columns
+            title = 'Correlation matrix of the output'
+
         elif corr_of == 'generated':
             samples = self.generated_samples
-        if self.corr is None: # if the correlation matrix is not computed yet
             all_corr = []
             for sample in samples: # for each generated scenario
                 temp_samples = sample.copy()
                 temp_samples.columns = self.columns
                 all_corr.append(temp_samples.corr())
-            self.corr = pd.concat(all_corr).groupby(level=0).mean() # average of the correlation matrix of each generated scenario
-            self.corr = self.corr.loc[self.columns, self.columns] # reorder the columns
+                self.corr = pd.concat(all_corr).groupby(level=0).mean() # average of the correlation matrix of each generated scenario
+                self.corr = self.corr.loc[self.columns, self.columns] # reorder the columns
+                title = 'Correlation matrix of the generated data'
+
         sns.heatmap(self.corr, annot=True, cmap='crest')
+        plt.title(title)
         plt.show()
         print('Correlation done')
         
@@ -148,34 +154,6 @@ class ESG(ABC):
         '''
         if self.all_quantiles is None: # if the quantiles are not computed yet
             self.quantiles()
-
-        fig, ax = plt.subplots(self.ncols, 1, figsize=(15, 6*self.ncols))
-        for i, col in enumerate(self.columns):
-            sns.lineplot(x=self.index, y=self.data[col], ax=ax[i], color='blue', linewidth=1, label='Historical data')
-            ax[i].set_title('Evolution of '+ col +' over time')
-            ax[i].grid(True)
-
-            quantiles_i = self.all_quantiles[i].rolling(windows).mean().bfill() # rolling mean of the quantiles
-
-            # plot the quantiles
-            #sns.lineplot(x=temp_index, y=quantiles_i[col+'_q50'], ax=ax[i], color='green', linewidth=1)
-            sns.lineplot(x=self.index, y=quantiles_i[col+'_q10'], ax=ax[i], color='orange', linewidth=0.7,label='10% quantile')
-            sns.lineplot(x=self.index, y=quantiles_i[col+'_q90'], ax=ax[i], color='orange', linewidth=0.7, label='90% quantile')
-            sns.lineplot(x=self.index, y=quantiles_i[col+'_q2.5'], ax=ax[i], color='red', linewidth=0.7, label='2.5% quantile')
-            sns.lineplot(x=self.index, y=quantiles_i[col+'_q97.5'], ax=ax[i], color='red', linewidth=0.7, label='97.5% quantile')
-
-            # plot the historical quantile
-            ax[i].axhline(self.data_train[col].quantile(0.10), color='orange', linestyle='dashed', linewidth=2, label='Historical 10% quantile')
-            ax[i].axhline(self.data_train[col].quantile(0.90), color='orange', linestyle='dashed', linewidth=2, label='Historical 90% quantile')
-            ax[i].axhline(self.data_train[col].quantile(0.025), color='red', linestyle='dashed', linewidth=2, label='Historical 2.5% quantile')
-            ax[i].axhline(self.data_train[col].quantile(0.975), color='red', linestyle='dashed', linewidth=2, label='Historical 97.5% quantile')
-
-
-            ax[i].legend(bbox_to_anchor = (1.22, 0.6), loc='center right')
-
-            ax[i].axvline(x=pd.to_datetime(self.test_date, format='%Y-%m-%d'), color='k', linestyle='dashed', linewidth=2) # plot the test date line
-
-            ax[i].set_xlim([pd.to_datetime(plot_from, format='%Y-%m-%d'), self.index[-1]]) # set the x-axis limits to reduce the size of the plot to focus on the last part of the data
-
-        plt.show()
+            
+        plot_quantiles_esg(self.data, self.data_train, self.all_quantiles, windows, self.test_date, plot_from)
     

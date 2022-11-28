@@ -159,6 +159,7 @@ class RBM(ESG):
         self.output = self.unencoding(self.output)
         self.output = self.unpack_data(self.output,'train')
         self.qq_plot()
+        self.correlation(corr_of='output')
 
         print('Train done')
 
@@ -178,6 +179,7 @@ class RBM(ESG):
         for _ in trange(self.scenarios): # for each scenario
 
             if method=='thermalisation':
+                type_unpack = 'all'
                 # we generate a random vector of 0 and 1
                 v = np.random.binomial(1, 0.5, size=self.n_visible)
                 generated_samples_i = np.array([v])
@@ -190,6 +192,7 @@ class RBM(ESG):
                     generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0)
 
             elif method=='simple':
+                type_unpack = 'train'
                 generated_samples_i = None
                 for elt in self.input:
                     v = elt 
@@ -202,7 +205,9 @@ class RBM(ESG):
             self.generated_samples.append(generated_samples_i)
         
         self.generated_samples = [self.unencoding(self.generated_samples[i]) for i in range(self.scenarios)] # unencoding
-        self.generated_samples = [self.unpack_data(self.generated_samples[i], 'all') for i in range(self.scenarios)] # unpack data to get a dataframe
+        self.generated_samples = [self.unpack_data(self.generated_samples[i], type_unpack) for i in range(self.scenarios)] # unpack data to get a dataframe
+        
+        
 
     print('Generate data done')
     

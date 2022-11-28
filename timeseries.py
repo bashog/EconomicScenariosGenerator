@@ -115,13 +115,10 @@ class TimeSeries:
     self.rbm = RBM(self.returns, test_date, scenarios)
     self.rbm.pre_processing()
     self.rbm.train(epochs, lr)
-    self.rbm.generate('simple', K)
-    self.rbm.correlation(corr_of='output')
-    '''
     self.rbm.generate('thermalisation', K)
     self.rbm.correlation(corr_of='generated')
     self.rbm.plot_returns(plot_from, windows)
-    '''
+
     
   
   
