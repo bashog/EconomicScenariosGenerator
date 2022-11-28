@@ -1,0 +1,15 @@
+### Virtual environment ###
+.venv
+
+### VisualStudioCode ###
+.vscode/*
+
+## pycache ##
+__pycache__
+
+### Stuffs ###
+datas
+esg on rates.ipynb
+
+
+
