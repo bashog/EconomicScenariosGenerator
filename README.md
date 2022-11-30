@@ -31,3 +31,4 @@
 
 ## Contributors
 Basile Hogenmuller alias @bashog
+Simon Evanno alias @Simzer994
