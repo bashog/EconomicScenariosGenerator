@@ -89,8 +89,8 @@ class RBM(ESG):
         self.input = self.encoding(data_pack)        
 
         # initialise weights and biases
-        prob_a = np.mean(self.input, axis=0)
-        self.a = np.log(prob_a / (1 - prob_a))
+        self.prob_a = np.mean(self.input, axis=0)
+        self.a = np.log(self.prob_a / (1 - self.prob_a))
         self.b = np.zeros(self.n_hidden)
         self.W = np.random.normal(loc=0, scale=0.01, size=(self.n_visible, self.n_hidden))
         print('Pre-processing done')
@@ -182,7 +182,7 @@ class RBM(ESG):
             if method=='thermalisation':
                 type_unpack = 'all'
                 # we generate a random vector of 0 and 1
-                v = np.random.binomial(1, 0.5, size=self.n_visible)
+                v = np.random.binomial(1, self.prob_a)
                 generated_samples_i = None
                 for _ in range(len(self.data-1)): # correspond of the length of the historical data we want to generate train + test
                     for _ in range(K): # thermalisation
