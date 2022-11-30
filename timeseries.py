@@ -38,6 +38,7 @@ class TimeSeries:
     self.returns = None 
     self.main_stat = None
     self.corr = None
+
     self.returns_weekly = None
     self.returns_monthly = None
     self.returns_annualy = None
@@ -78,19 +79,33 @@ class TimeSeries:
     self.returns_annualy = self.returns.resample('Y').sum()
 
 
-
-  def plot(self, type_plot:str):
+  def plot(self, type_plot:str, type_return='daily'):
     '''
     Plot the prices or the returns
     type_plot : str
       Type of plot we want to generate 
       It can be 'prices' or 'returns'
+    type_return : str
+      Type of returns we want to plot
+      It can be 'daily', 'weekly', 'monthly' or 'annualy'
     '''
     if type_plot=='rates':
       plot_prices(self.data)
 
     elif type_plot=='returns':
-      plot_returns(self.returns)
+
+      if type_return=='daily':
+        plot_returns(self.returns)
+
+      elif type_return=='monthly':
+        plot_returns(self.returns_monthly)
+      
+      elif type_return=='weekly':
+        plot_returns(self.returns_weekly)
+
+      elif type_return=='annualy':
+        plot_returns(self.returns_annualy)
+
 
 
   def statistics(self):
@@ -110,31 +125,35 @@ class TimeSeries:
     plt.title('Historical correlation')
     plt.show()
   
-  def bootstrap_esg(self, scenarios:int, test_date, plot_from:str, windows=5):
+  def bootstrap_esg(self, scenarios:int, test_date, plot_from:str, windows=5, frequency='daily'):
     '''Generate bootstrap samples'''
-    self.bts = Bootstrap(self.returns, test_date, scenarios)
+    if frequency == 'daily':
+      self.bts = Bootstrap(self.returns, test_date, scenarios)
+    elif frequency == 'weekly':
+      self.bts = Bootstrap(self.returns_weekly, test_date, scenarios)
+    elif frequency == 'monthly':
+      self.bts = Bootstrap(self.returns_monthly, test_date, scenarios)
+    elif frequency == 'annualy':
+      self.bts = Bootstrap(self.returns_annualy, test_date, scenarios)
     self.bts.pre_processing()
     self.bts.train()
     self.bts.generate()
     self.bts.correlation()
     self.bts.plot_returns(plot_from, windows)
   
-  def rbm_esg(self, scenarios:int, epochs:int, lr:float, K:int, test_date, plot_from:str, windows=10):
+  def rbm_esg(self, scenarios:int, epochs:int, lr:float, K:int, test_date, plot_from:str, windows=10, frequency="daily"):
     '''Generate RBM samples'''
-    self.rbm = RBM(self.returns, test_date, scenarios)
+    if frequency == 'daily':
+      self.rbm = RBM(self.returns, test_date, scenarios)
+    elif frequency == 'weekly':
+      self.rbm = RBM(self.returns_weekly, test_date, scenarios)
+    elif frequency == 'monthly':
+      self.rbm = RBM(self.returns_monthly, test_date, scenarios)
+    elif frequency == 'annualy':
+      self.rbm = RBM(self.returns_annualy, test_date, scenarios)
     self.rbm.pre_processing()
     self.rbm.train(epochs, lr)
     self.rbm.generate('thermalisation', K)
     self.rbm.correlation(corr_of='generated')
     self.rbm.plot_returns(plot_from, windows)
 
-    
-  
-  
-  
-
-    
-
-  
-
-  
