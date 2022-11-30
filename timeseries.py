@@ -38,9 +38,9 @@ class TimeSeries:
     self.returns = None 
     self.main_stat = None
     self.corr = None
-    self.returns_hebdo = None
+    self.returns_weekly = None
     self.returns_monthly = None
-    self.returns_annual = None
+    self.returns_annualy = None
 
   def pre_processing(self, fill_method='fill', method_return='arithmetic', keep_extreme_value=False): 
     '''
@@ -71,9 +71,9 @@ class TimeSeries:
     self.method_return = method_return
     self.returns = get_returns(self.data, self.method_return, keep_extreme_value)
     self.first_value = self.data.loc[self.returns.index[0]]
-    self.returns_hebdo = self.returns.resample('W').sum()
+    self.returns_weekly = self.returns.resample('W').sum()
     self.returns_monthly = self.returns.resample('M').sum()
-    self.returns_annual = self.returns.resample('Y').sum()
+    self.returns_annualy = self.returns.resample('Y').sum()
 
 
 
