@@ -5,6 +5,7 @@ import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 # Changement test Simon
+# 2e changement test Simon
 
 ### About returns ###
 def get_returns(prices:pd.DataFrame, method_return:str, keep_extreme_value:bool):
