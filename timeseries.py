@@ -71,6 +71,8 @@ class TimeSeries:
     self.method_return = method_return
     self.returns = get_returns(self.data, self.method_return, keep_extreme_value)
     self.first_value = self.data.loc[self.returns.index[0]]
+
+    # computation of all the returns (weekly, monthly and annualy)
     self.returns_weekly = self.returns.resample('W').sum()
     self.returns_monthly = self.returns.resample('M').sum()
     self.returns_annualy = self.returns.resample('Y').sum()
