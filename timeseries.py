@@ -79,7 +79,7 @@ class TimeSeries:
     self.returns_annualy = self.returns.resample('Y').sum()
 
 
-  def plot(self, type_plot:str, type_return='daily'):
+  def plot(self, type_plot:str, frequency='daily'):
     '''
     Plot the prices or the returns
     type_plot : str
@@ -94,16 +94,16 @@ class TimeSeries:
 
     elif type_plot=='returns':
 
-      if type_return=='daily':
+      if frequency=='daily':
         plot_returns(self.returns)
 
-      elif type_return=='monthly':
+      elif frequency=='monthly':
         plot_returns(self.returns_monthly)
       
-      elif type_return=='weekly':
+      elif frequency=='weekly':
         plot_returns(self.returns_weekly)
 
-      elif type_return=='annualy':
+      elif frequency=='annualy':
         plot_returns(self.returns_annualy)
 
 
@@ -156,4 +156,5 @@ class TimeSeries:
     self.rbm.generate('thermalisation', K)
     self.rbm.correlation(corr_of='generated')
     self.rbm.plot_returns(plot_from, windows)
+    self.rbm.plot_mse()
 
