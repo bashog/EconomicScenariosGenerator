@@ -42,7 +42,23 @@ def coumpound_quantiles(quantiles:pd.DataFrame,  prices:pd.DataFrame, method_ret
 
     return cum_quantiles
 
-    
+## About geneeration of samples ##
+def thermalisation_sampling(K, n_samples, prob_a, W, b, a):
+            '''
+            Thermalisation sampling method to generate new data
+            It takes the precendent value and thermalise it for K steps
+            '''
+            sigmoid = lambda x: 1/(1+np.exp(-x))
+            generated_samples_i = None
+            v = np.random.binomial(1, prob_a)
+            for _ in range(n_samples):
+                for _ in range(K):
+                    h = sigmoid(np.dot(v, W) + b)
+                    h = np.random.binomial(1, h)
+                    v = sigmoid(np.dot(h, W.T) + a)
+                    v = np.random.binomial(1, v)
+                generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0) if generated_samples_i is not None else np.array([v])
+            return generated_samples_i   
 
 
 ### To plot ###

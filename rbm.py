@@ -9,7 +9,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import time
 from tqdm import tqdm, trange
-from statistics_tools import summary_statistics
+from utils import thermalisation_sampling
+
+from multiprocessing import Pool
 
 from esg import ESG
 
@@ -165,7 +167,7 @@ class RBM(ESG):
         print('Train done')
 
     
-    def generate(self, method:str, K=1000):
+    def generate(self, K=1000, parrallel=False):
         '''
         Generate new data
 
@@ -174,40 +176,21 @@ class RBM(ESG):
                 'thermalisation' for generation new data different from the historical data train. It successively took the precendent value and thermalise it for K steps
         K: thermalisation time for the 'thermalisation' method to generate new data
         '''
-        sigmoid = lambda x: 1 / (1 + np.exp(-x))
+        n_samples = self.data.shape[0]
         self.generated_samples = []
-
-        for _ in trange(self.scenarios): # for each scenario
-
-            if method=='thermalisation':
-                type_unpack = 'all'
-                # we generate a random vector of 0 and 1
-                v = np.random.binomial(1, self.prob_a)
-                generated_samples_i = None
-                for _ in range(len(self.data-1)): # correspond of the length of the historical data we want to generate train + test
-                    for _ in range(K): # thermalisation
-                        h = sigmoid(np.dot(v, self.W) + self.b)
-                        h = np.random.binomial(1, h) # forward pass
-                        v = sigmoid(np.dot(h, self.W.T) + self.a)
-                        v = np.random.binomial(1, v) # backward pass
-                    generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0) if generated_samples_i is not None else np.array([v])
-
-            elif method=='simple':
-                type_unpack = 'train'
-                generated_samples_i = None
-                for elt in self.input:
-                    v = elt 
-                    h = sigmoid(np.dot(v, self.W) + self.b)
-                    h = np.random.binomial(1, h)
-                    v = sigmoid(np.dot(h, self.W.T) + self.a)
-                    v = np.random.binomial(1, v)
-                    generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0) if generated_samples_i is not None else np.array([v])
-
-            self.generated_samples.append(generated_samples_i)
         
+        if parrallel:
+            # parallelisation of the thermalisation sampling method to generate self.scenarios new data
+            
+            with Pool(processes=self.scenarios) as pool:
+                self.generated_samples = pool.starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
+        else:
+            for _ in trange(self.scenarios):
+                self.generated_samples.append(thermalisation_sampling(K, n_samples, self.prob_a, self.W, self.b, self.a))
+
+               
         self.generated_samples = [self.unencoding(self.generated_samples[i]) for i in range(self.scenarios)] # unencoding
-        self.generated_samples = [self.unpack_data(self.generated_samples[i], type_unpack) for i in range(self.scenarios)] # unpack data to get a dataframe
-        
+        self.generated_samples = [self.unpack_data(self.generated_samples[i], 'all') for i in range(self.scenarios)] # unpack data to get a dataframe        
         
 
     print('Generate data done')

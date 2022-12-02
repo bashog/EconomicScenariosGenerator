@@ -110,12 +110,12 @@ class TimeSeries:
     self.bts.correlation()
     self.bts.plot_returns(plot_from, windows)
   
-  def rbm_esg(self, scenarios:int, epochs:int, lr:float, K:int, test_date, plot_from:str, windows=10):
+  def rbm_esg(self, scenarios:int, epochs:int, lr:float, K:int, test_date, plot_from:str, windows=10, parallel=True):
     '''Generate RBM samples'''
     self.rbm = RBM(self.returns, test_date, scenarios)
     self.rbm.pre_processing()
     self.rbm.train(epochs, lr)
-    self.rbm.generate('thermalisation', K)
+    self.rbm.generate(K, parallel)
     self.rbm.correlation(corr_of='generated')
     self.rbm.plot_returns(plot_from, windows)
 
