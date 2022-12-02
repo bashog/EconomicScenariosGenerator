@@ -11,7 +11,7 @@ import time
 from tqdm import tqdm, trange
 from utils import thermalisation_sampling
 
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 
 from esg import ESG
 
@@ -178,12 +178,10 @@ class RBM(ESG):
         '''
         n_samples = self.data.shape[0]
         self.generated_samples = []
-        
-        if parrallel:
-            # parallelisation of the thermalisation sampling method to generate self.scenarios new data
-            
-            with Pool(processes=self.scenarios) as pool:
-                self.generated_samples = pool.starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
+
+        if parrallel:           
+            self.generated_samples = Pool(cpu_count()).starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
+
         else:
             for _ in trange(self.scenarios):
                 self.generated_samples.append(thermalisation_sampling(K, n_samples, self.prob_a, self.W, self.b, self.a))

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from tqdm import trange
 
 
 ### About returns ###
@@ -51,7 +52,7 @@ def thermalisation_sampling(K, n_samples, prob_a, W, b, a):
             sigmoid = lambda x: 1/(1+np.exp(-x))
             generated_samples_i = None
             v = np.random.binomial(1, prob_a)
-            for _ in range(n_samples):
+            for _ in trange(n_samples):
                 for _ in range(K):
                     h = sigmoid(np.dot(v, W) + b)
                     h = np.random.binomial(1, h)
