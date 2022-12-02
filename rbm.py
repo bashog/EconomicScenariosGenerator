@@ -180,8 +180,8 @@ class RBM(ESG):
         self.generated_samples = []
 
         if parrallel:     
-            self.generated_samples = Pool(cpu_count()).starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
-            #self.generated_samples = Pool(cpu_count()).starmap(thermalisation_sampling, tqdm.tqdm((K, n_samples, self.prob_a, self.W, self.b, self.a),  total=self.scenarios))
+            #self.generated_samples = Pool(cpu_count()).starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
+            self.generated_samples = Pool(cpu_count()).starmap(thermalisation_sampling, tqdm.tqdm((K, n_samples, self.prob_a, self.W, self.b, self.a),  total=self.scenarios))
 
         else:
             for _ in trange(self.scenarios):
