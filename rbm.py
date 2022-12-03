@@ -12,6 +12,7 @@ from tqdm import tqdm, trange
 from utils import thermalisation_sampling
 
 from multiprocessing import Pool
+import threading
 
 from esg import ESG
 
@@ -167,7 +168,7 @@ class RBM(ESG):
         print('Train done')
 
     
-    def generate(self, K=1000, parrallel=False):
+    def generate(self, K=1000, optimisation='None'):
         '''
         Generate new data
 
@@ -179,14 +180,31 @@ class RBM(ESG):
         n_samples = self.data.shape[0]
         self.generated_samples = []
         
-        if parrallel:
+        if optimisation == 'parallel':
+            start = time.time()
             # parallelisation of the thermalisation sampling method to generate self.scenarios new data
             
             with Pool(processes=self.scenarios) as pool:
                 self.generated_samples = pool.starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
-        else:
+        
+        elif optimisation == 'threading':
+            # add the time to generate the data
+            start = time.time()
+            threads = []
+            for _ in range(self.scenarios):
+                t = threading.Thread(target=thermalisation_sampling, args=(K, n_samples, self.prob_a, self.W, self.b, self.a))
+                threads.append(t)
+                t.start()
+            for t in threads:
+                t.join()
+        
+        elif optimisation == 'None':
+            start = time.time()
             for _ in trange(self.scenarios):
                 self.generated_samples.append(thermalisation_sampling(K, n_samples, self.prob_a, self.W, self.b, self.a))
+
+        end = time.time()
+        print('Time to generate the data: ', end - start)               
 
                
         self.generated_samples = [self.unencoding(self.generated_samples[i]) for i in range(self.scenarios)] # unencoding
