@@ -432,7 +432,3 @@ class RBM_simple:
 
 
     
-
-
-            
-        
