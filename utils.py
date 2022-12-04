@@ -11,7 +11,7 @@ def get_returns(prices:pd.DataFrame, method_return:str, keep_extreme_value:bool)
     ''' Calculate the returns of a time series of prices '''
     if method_return == 'arithmetic':
         data_returns = prices.pct_change()
-    elif method_return == 'log':
+    elif method_return == 'logarithmic':
         prices = prices.astype(float)
         data_returns = np.log(prices/ prices.shift(1) )
     else:
@@ -147,7 +147,7 @@ def plot_quantiles_esg(data:pd.DataFrame, data_train:pd.DataFrame, quantiles:lis
 
     plt.show()
 
-def plot_coumpound_quantiles_esg(prices, all_quantiles, test_date, plot_from):
+def plot_coumpound_quantiles_esg(prices, all_quantiles, test_date, plot_from, method_return):
     ''' 
     Used to plot the coumpound quantiles returns from the generated datas 
     
@@ -162,7 +162,6 @@ def plot_coumpound_quantiles_esg(prices, all_quantiles, test_date, plot_from):
         The date from which to plot the data
     '''
     ncols = prices.shape[1]
-    index = prices.index
     columns = prices.columns
 
     fig, ax = plt.subplots(ncols, 1, figsize=(15, 6*ncols))
@@ -178,9 +177,15 @@ def plot_coumpound_quantiles_esg(prices, all_quantiles, test_date, plot_from):
         # add the first price row to the quantiles and restrict to the test date
         quantiles_i = all_quantiles[i][pd.to_datetime(test_date, format='%Y-%m-%d'):]
         index_quantiles_i = quantiles_i.index
-        prices_i = prices_i[0]
+        #prices_i = prices_i[0]
         # calculate the cumulative product of the quantiles
-        quantiles_i = prices_i*(quantiles_i + 1).cumprod()
+        #quantiles_i = prices_i*(quantiles_i + 1).cumprod()
+        price_test_date = prices[col][pd.to_datetime(test_date, format='%Y-%m-%d'):][0]
+        if method_return == 'logarithmic':
+            # cumulative log returens
+            quantiles_i = price_test_date*np.exp(quantiles_i.cumsum())
+        elif method_return == 'arithmetic':
+            quantiles_i = price_test_date*(1+quantiles_i).cumprod()
 
         # plot the quantiles
         sns.lineplot(x=index_quantiles_i, y=quantiles_i[col+'_q10'], ax=ax[i], color='orange', linewidth=0.7,label='10% quantile')

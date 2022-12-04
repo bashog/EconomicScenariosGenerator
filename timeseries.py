@@ -117,7 +117,7 @@ class TimeSeries:
     self.rbm.generate(K, parallel)
     self.rbm.correlation(corr_of='generated')
     self.rbm.plot_returns(plot_from, windows)
-    self.rbm.plot_coumpound_returns(plot_from, self.data)
+    self.rbm.plot_coumpound_returns(plot_from, self.data, self.method_return)
 
     
   
