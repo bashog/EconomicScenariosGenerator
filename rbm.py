@@ -134,7 +134,7 @@ class RBM(ESG):
         plt.ylabel('MSE')
         plt.yscale('log')
         plt.title('MSE of the visible bias, hidden bias and weights')
-        plt.legend()
+        plt.legend(bbox_to_anchor = (1.22, 0.6), loc='center right')
         plt.show()
        
     
