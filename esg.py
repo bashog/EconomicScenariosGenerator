@@ -3,7 +3,7 @@ import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
-from utils import coumpound_quantiles, plot_quantiles_esg
+from utils import coumpound_quantiles, plot_quantiles_esg, plot_coumpound_quantiles_esg
 
 class ESG(ABC):
     ''' 
@@ -156,4 +156,20 @@ class ESG(ABC):
             self.quantiles()
             
         plot_quantiles_esg(self.data, self.data_train, self.all_quantiles, windows, self.test_date, plot_from)
+    
+    def plot_coumpound_returns(self, plot_from:str, prices:pd.DataFrame):
+        ''' 
+        Plot the compound returns of the generated data with the quantiles 0.025, 0.10, 0.5, 0.90, 0.975 
+        The plot is done for each column of the data 
+            
+        Parameters:
+        plot_from: str
+            The date from which the plot is done
+        prices: pd.DataFrame
+            Prices of the assets
+        '''
+        if self.all_quantiles is None: # if the quantiles are not computed yet
+            self.quantiles()
+        
+        plot_coumpound_quantiles_esg(prices, self.all_quantiles, self.test_date, plot_from)
     
