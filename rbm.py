@@ -207,7 +207,7 @@ class RBM(ESG):
         print('Train done')
 
     
-    def generate(self, K=1000, parrallel=False):
+    def generate(self, K=1000, parallel=False):
         '''
         Generate new data
 
@@ -218,14 +218,20 @@ class RBM(ESG):
         '''
         n_samples = self.data.shape[0]
         self.generated_samples = []
-
-        if parrallel:     
-            #self.generated_samples = Pool(cpu_count()).starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
-            self.generated_samples = Pool(cpu_count()).starmap(thermalisation_sampling, tqdm.tqdm((K, n_samples, self.prob_a, self.W, self.b, self.a),  total=self.scenarios))
+        
+        if parallel:
+            start = time.time()
+            # parallelisation of the thermalisation sampling method to generate self.scenarios new data            
+            with Pool(processes=cpu_count()) as pool:
+                self.generated_samples = pool.starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
 
         else:
+            start = time.time()
             for _ in trange(self.scenarios):
                 self.generated_samples.append(thermalisation_sampling(K, n_samples, self.prob_a, self.W, self.b, self.a))
+
+        end = time.time()
+        print('Time to generate the data: {}s'.format(end-start))               
 
                
         self.generated_samples = [self.unencoding(self.generated_samples[i]) for i in range(self.scenarios)] # unencoding

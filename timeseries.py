@@ -71,7 +71,6 @@ class TimeSeries:
     # we calculate the returns
     self.method_return = method_return
     self.returns = get_returns(self.data, self.method_return, keep_extreme_value)
-    self.first_value = self.data.loc[self.returns.index[0]]
 
     # computation of all the returns (weekly, monthly and annualy)
     self.returns_weekly = self.returns.resample('W').sum()
@@ -143,6 +142,7 @@ class TimeSeries:
   
 
   def rbm_esg(self, scenarios:int, epochs:int, lr:float, K:int, test_date, plot_from:str, windows=10, frequency="daily", parallel=True):
+
     '''Generate RBM samples'''
     if frequency == 'daily':
       self.rbm = RBM(self.returns, test_date, scenarios)
@@ -154,8 +154,11 @@ class TimeSeries:
       self.rbm = RBM(self.returns_annualy, test_date, scenarios)
     self.rbm.pre_processing()
     self.rbm.train(epochs, lr)
+    self.rbm.plot_mse()
     self.rbm.generate(K, parallel)
     self.rbm.correlation(corr_of='generated')
     self.rbm.plot_returns(plot_from, windows)
+    self.rbm.plot_coumpound_returns(plot_from, self.data, self.method_return)
     self.rbm.plot_mse()
+
 
