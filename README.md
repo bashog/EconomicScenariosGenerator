@@ -32,9 +32,18 @@ The block samples are chosen randomly to create bootstrap resamples, there are s
 Here, we analyse daily, weekly and monthly frequencies. To make these analysis, we have chosen to plot from 01-01-2020 by chosing 100 scenarios and 04-09-2021 as test date.
 For each type of frequency we plot the correlation between the USD, the JPY, the GBP and the CAD currency.
 
-- explanation of the algorithm
-- how to use it (snippet of code)
-- results (photo etc)
+#### Example 
+
+This is a boostrap code example that corresponds to the daily frequency :
+
+```shell
+test_dates = '2021-09-04'
+plot_from='2020-01-01'
+scenarios = 100
+ts.bootstrap_esg(scenarios=scenarios, test_date=test_dates, plot_from=plot_from)
+```
+Which gives us for the USD currency : 
+![](img/usd.PNG)
 
 
 ### Restricted Boltzman Machine
