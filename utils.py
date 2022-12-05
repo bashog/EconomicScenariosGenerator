@@ -6,7 +6,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from tqdm import trange
 
-
 ### About returns ###
 def get_returns(prices:pd.DataFrame, method_return:str, keep_extreme_value:bool):
     ''' Calculate the returns of a time series of prices '''
@@ -147,7 +146,3 @@ def plot_quantiles_esg(data:pd.DataFrame, data_train:pd.DataFrame, quantiles:lis
         ax[i].set_xlim([pd.to_datetime(plot_from, format='%Y-%m-%d'), index[-1]]) # set the x-axis limits to reduce the size of the plot to focus on the last part of the data
 
     plt.show()
-
-
-        
-

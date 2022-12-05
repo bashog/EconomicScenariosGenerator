@@ -30,6 +30,12 @@ class RBM(ESG):
         self.a = None
         self.b = None
 
+
+        self.mse_a = None
+        self.mse_b = None
+        self.mse_W = None
+        self.mse_abW = [[],[],[]]
+
     
     def encoding(self, array_real:np.array):
         '''
@@ -106,8 +112,33 @@ class RBM(ESG):
             pp_array2 = sm.ProbPlot(self.output.iloc[:,i])
             pp_array2.qqplot(line='45', other=pp_array1, xlabel='Output Quantiles'+col, ylabel='Real Quantiles'+col, ax=axes[i//2, i%2])
         plt.show()
-       
 
+
+    def mse(self, array1:np.array, array2:np.array):
+        ''' 
+        Calculate the mean square error between two arrays of real data
+        Parameters:
+            array1 (np.array)
+            array2 (np.array)
+        Returns:
+            mean (float)
+        '''
+        return np.mean((array1 - array2) ** 2)
+    
+
+    def plot_mse(self):
+        '''Plot the mse'''
+        plt.figure(figsize=(15,6))
+        plt.plot(pd.DataFrame(self.mse_abW[0]).rolling(10).mean(), label='mse of the visible units')
+        plt.plot(pd.DataFrame(self.mse_abW[1]).rolling(10).mean(), label='mse of the hidden units')
+        plt.plot(pd.DataFrame(self.mse_abW[2]).rolling(10).mean(), label='mse of the weights')
+        plt.xlabel('Epoch')
+        plt.ylabel('MSE')
+        plt.yscale('log')
+        plt.title('MSE of the visible bias, hidden bias and weights')
+        plt.legend(bbox_to_anchor = (1.22, 0.6), loc='center right')
+        plt.show()
+       
     
     def train(self, epochs=1000, lr=0.01, batch_size=10, k_steps=1,):
         '''
@@ -147,7 +178,16 @@ class RBM(ESG):
                 
                 self.W += lr * (np.outer(v0,positive_grad) - np.outer(v,negative_grad))
                 self.a += lr * (v0 - v)
-                self.b += lr * (h0 - h)           
+                self.b += lr * (h0 - h)
+
+            #compute the mean square error of the bias of visible/hidden layers and on weights
+            self.mse_a = self.mse(v0, v)
+            self.mse_b = self.mse(h0, h)
+            self.mse_W = self.mse(np.outer(v0,positive_grad), np.outer(v,negative_grad))
+
+            self.mse_abW[0].append(self.mse_a)
+            self.mse_abW[1].append(self.mse_b)
+            self.mse_abW[2].append(self.mse_W)
 
         self.output = None
         for elt in self.input: # take the output of the RBM and decode it into real data and plot the QQ plot to compare the real data and the output
@@ -189,6 +229,7 @@ class RBM(ESG):
 
                
         self.generated_samples = [self.unencoding(self.generated_samples[i]) for i in range(self.scenarios)] # unencoding
+        
         self.generated_samples = [self.unpack_data(self.generated_samples[i], 'all') for i in range(self.scenarios)] # unpack data to get a dataframe        
         
 
@@ -375,7 +416,3 @@ class RBM_simple:
 
 
     
-
-
-            
-        
