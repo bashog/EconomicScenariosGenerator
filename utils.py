@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-
+from tqdm import trange
 
 ### About returns ###
 def get_returns(prices:pd.DataFrame, method_return:str, keep_extreme_value:bool):
@@ -59,6 +59,7 @@ def thermalisation_sampling(K, n_samples, prob_a, W, b, a):
             v = np.random.binomial(1, v)
         generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0) if generated_samples_i is not None else np.array([v])
     return generated_samples_i   
+
 
 
 ### To plot ###
@@ -146,6 +147,7 @@ def plot_quantiles_esg(data:pd.DataFrame, data_train:pd.DataFrame, quantiles:lis
         ax[i].set_xlim([pd.to_datetime(plot_from, format='%Y-%m-%d'), index[-1]]) # set the x-axis limits to reduce the size of the plot to focus on the last part of the data
 
     plt.show()
+    
 
 def plot_coumpound_quantiles_esg(prices, all_quantiles, test_date, plot_from, method_return):
     ''' 
@@ -198,7 +200,4 @@ def plot_coumpound_quantiles_esg(prices, all_quantiles, test_date, plot_from, me
         ax[i].axvline(x=pd.to_datetime(test_date, format='%Y-%m-%d'), color='k', linestyle='dashed', linewidth=2) # plot the test date line
        
     plt.show()   
-
-
-        
 
