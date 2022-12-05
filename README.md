@@ -20,6 +20,7 @@
 - explanation of the algorithm
 - how to use it (snippet of code)
 - results (photo etc)
+blabla
 
 
 ### Restricted Boltzman Machine
@@ -32,3 +33,4 @@
 ## Contributors
 Basile Hogenmuller alias @bashog
 Simon Evanno alias @Simzer994
+Basma Bazi alias @basmabazi
