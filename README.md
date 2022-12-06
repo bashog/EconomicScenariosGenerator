@@ -61,7 +61,7 @@ The RBM class gathers all the functions that allow to realize the model :
 - The generate function : allows to generate new data with the thermalization method which is based on the generation of new data. For each scenario, we take a random vector already trained on the previous weights and biases then we pass it K times (K represents the thermalization factor) in the forwards and backwards passes to be able to generate new data different from the historical ones.  
 
 #### Results
-This is a RBM code example that corresponds to the 10 scenarios and 10000 epochs :
+This is an example of RBM code that corresponds to the 10 scenarios and 10000 epochs :
 
 <img width="315" alt="codeqqplot" src="https://user-images.githubusercontent.com/119663180/205979227-4c0b921a-e5b0-4026-8600-d8a72522ed15.png">
 
