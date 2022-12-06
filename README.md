@@ -46,11 +46,11 @@ The RBM class gathers all the functions that allow to realize the model :
 
 - The __init__ function :  Initialise the RBM class with the ESG abstract class avec comme entrée les données encodées 
 
-- The Encoding function: allows to transform the data into binary with the real data table as input 
+- The Encoding function : allows to transform the data into binary with the real data table as input 
 
-- The Unencoding function: allows to decode the output of the binary algorithm into real data 
+- The Unencoding function : allows to decode the output of the binary algorithm into real data 
 
-- The unpack_data function:  
+- The unpack_data function : transforms numpy to dataframe
 
 - The pre_processing function : It takes the real data and encode it into binary by setting the min and max values used also for the encoding and It initialises the weights and biases 
 
@@ -58,7 +58,7 @@ The RBM class gathers all the functions that allow to realize the model :
 
 - The train function : it is the training function of the data with the k contrastive divergence method. For each batch among each of the epochs, weights and biases are updated and then for each epoch we compute the mean square error of the bias of visible/hidden layers and on weights. Then the generated output passes through the forward and backward passes and it is unencoded it the end.
 
-- The generate function: allows to generate new data with the thermalization method which is based on the generation of new data. For each scenario, we take a random vector already trained on the previous weights and biases then we pass it K times (K represents the thermalization factor) in the forwards and backwards passes to be able to generate new data different from the historical ones.  
+- The generate function : allows to generate new data with the thermalization method which is based on the generation of new data. For each scenario, we take a random vector already trained on the previous weights and biases then we pass it K times (K represents the thermalization factor) in the forwards and backwards passes to be able to generate new data different from the historical ones.  
 
 #### Results
 Here are the results of the qq-plot :
