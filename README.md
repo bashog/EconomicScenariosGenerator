@@ -55,7 +55,7 @@ ts.plot(type_plot='rates')
 ```
 
 Which gives the following plot :
-![](/Users/vivianefeng/Documents/EconomicScenariosGenerator/Capture d’écran 2022-12-06 à 18.32.14.png)
+![](/Capture d’écran 2022-12-06 à 18.32.14.png)
 
 
 ### Economic scenario generator abstract class
