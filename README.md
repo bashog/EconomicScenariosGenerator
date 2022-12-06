@@ -33,6 +33,8 @@ Through a GSS we could simulate this variable by being consistent with its past 
 - explanation of the algorithm
 - how to use it
 - results
+<img width="474" alt="bnp" src="https://user-images.githubusercontent.com/119663180/205840023-6dcba43f-112b-4f91-98c7-f5e75625d41e.png">
+
 
 
 
