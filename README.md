@@ -64,6 +64,7 @@ ts.statistics()
 ```
 
 Which gives the following table :
+
 ![](img/statistic.png)
 
 ```shell
@@ -71,6 +72,7 @@ ts.correlation()
 ```
 
 Which gives the following table :
+
 ![](img/correlation.png)
 
 
