@@ -10,7 +10,7 @@ This repository contains an abstract mother class for generating economic scenar
 These two classes are called by the `TimeSeries' class, which is used to train the generator and generate new scenarios.
 
 ### Usage
-To use the EconomicScenarioGenerator class, you will need to create a child class that implements the abstract methods defined in the mother class. You can then use the child class to train the generator to historical returns, generate new scenarios, and evaluate the performance of the generator by comparing the historical quantiles and the quantiles generated.
+To use the `EconomicScenarioGenerator` class, you will need to create a child class that implements the abstract methods defined in the mother class. You can then use the child class to train the generator to historical returns, generate new scenarios, and evaluate the performance of the generator by comparing the historical quantiles and the quantiles generated.
 
 ## The models
 
