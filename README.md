@@ -169,9 +169,9 @@ Here are the results of the qq-plot :
 
 
 ## Contributors
-Basile Hogenmuller alias @bashog
-Simon Evanno alias @Simzer994
-Viviane Feng alias @vivianefeng
-Basma Bazi alias @basmabazi
+- Basile Hogenmuller alias @bashog
+- Simon Evanno alias @Simzer994
+- Viviane Feng alias @vivianefeng
+- Basma Bazi alias @basmabazi
 
 
