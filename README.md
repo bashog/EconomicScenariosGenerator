@@ -8,6 +8,10 @@ An ESG consists of a set of models (interest rates, equities, asset yields, cred
 
 ## Project motivations and purposes
 
+During the project, we will work on exchange rate returns from past years and then use different methods for generating economic scenarios :
+- Bootstrapping
+- Restricted Boltzmann Machine (RBM)
+
 After the financial crisis of 2008, states realized that economic risks could represent a threat to the community. As a result, stricter measures have been imposed on banks and insurance companies in terms of regulation and economic conduct. Among these measures we cite a better management of risks by modeling its factors. This project  aims to analyze and forecast the exchange rate as our main risk factor.  
 
 Through an ESG we could simulate this variable by being consistent with its past evolutions, i.e. with the dynamics associated with it but also with the evolution of the dependency structure. Parametric or non-parametric methods like bootstrapping can be used, as well as generative machine learning models.  
@@ -15,13 +19,29 @@ Through an ESG we could simulate this variable by being consistent with its past
 ## Structure of the code
 This repository contains an abstract mother class for generating economic scenarios, as well as two child classes that inherit from the mother class: a `Bootstrap` class and a Restricted Boltzmann Machine `RBM` class.
 These two classes are called by the `TimeSeries' class, which is used to train the generator and generate new scenarios.
+- bootstrap contains the bootstrapping class. It allows to call Python functions which are going to generate bootstrap samples.
+- esg contains the ESG class. It is the blueprint for the inheritance of the different ESG classes. It defines Python functions used by all the different methods.
+- rbm contains the RBM and RBM_simple classes. It allows to call Python functions which are going to generate economic scenarios with RBM methods
+- statistics_tools defines Python functions which give information about statistical properties and tests.
+- timeseries contains the Timeseries class. This class uses the other classes and functions to get the results. It is the main running file.
+- utils defines Python functions about returns, generation of samples or plot.
 
 ### Usage
 To use the `EconomicScenarioGenerator` class, you will need to create a child class that implements the abstract methods defined in the mother class. You can then use the child class to train the generator to historical returns, generate new scenarios, and evaluate the performance of the generator by comparing the historical quantiles and the quantiles generated.
 
+
 ## The models
 
 ### Time series class
+
+The Time series class defines 7 functions that we will to process and generate the results :
+- __init__
+- pre_processing
+- plot
+- statistics
+- correlation
+- bootstrap_esg
+- rbm_esg
 
 ### Economic scenario generator abstract class
 - purpose of the class
@@ -57,7 +77,12 @@ Which gives us for the USD currency :
 ![](img/usd.PNG)
 
 
-### Restricted Boltzman Machine
+
+### Restricted Boltzmann Machine
+- explanation of the algorithm
+- how to use it
+- results
+
 #### RBM method
 A Restricted Boltzmann Machine is a two-layer network with stochastic activation units. Restricted means that there is no connection between units whithin the same layer. The layer which is exposed to the training data set is called the visible layer. Inputs from the visible layer flow through the network (forward pass) to the hidden layer.
 
@@ -99,5 +124,7 @@ Here are the results of the qq-plot :
 ## Contributors
 Basile Hogenmuller alias @bashog
 Simon Evanno alias @Simzer994
+Viviane Feng alias @vivianefeng
 Basma Bazi alias @basmabazi
+
 
