@@ -55,7 +55,8 @@ ts.plot(type_plot='rates')
 ```
 
 Which gives the following plot :
-![](img/plot.PNG)
+![](img/plot)
+
 
 
 ### Economic scenario generator abstract class
