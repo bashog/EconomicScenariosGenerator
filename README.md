@@ -34,18 +34,28 @@ To use the `EconomicScenarioGenerator` class, you will need to create a child cl
 
 ### Time series class
 
-The Time series class defines 7 functions that we will to process and generate the results :
-- __init__
-- pre_processing
-- plot
-- statistics
-- correlation
-- bootstrap_esg
-- rbm_esg
+The Time series class defines 7 functions that we will use on the source data to process and generate the results :
+- __init__ : initialize the class and keep the data needed;
+- pre_processing : basic preprocessing of the data by choosing the way the missing values are filled, the method used to calculate the returns and whether the extreme values are kept ;
+- plot : plot the prices or the returns ;
+- statistics : compute the main statistics of the returns ;
+- correlation : calculate the correlation matrix ;
+- bootstrap_esg : generate the bootstrap samples ;
+ - rbm_esg : generate the rbm samples.
+It is the class called to generate results in our notebook.
+
 
 ### Economic scenario generator abstract class
-- purpose of the class
-- design of the class
+
+The abstract class for the Economic Scenario Generator is the blueprint for the inheritance of the different ESG classes. In our case, we used it for the bootstrap and the rbm classes.
+The class must implement the following functions:
+- pre_processing : Preprocess the data ;
+- train : Train the model on the train set ;
+- generate : Generate the scenarios ;
+- quantiles : Get the quantiles of the generated data ;
+- correlation : Get the correlation matrix of the generated data ;
+- plot_returns : Plot the returns of the initial data and the quantiles of the generated data.
+
 
 ### Bootstrapping
 
