@@ -57,7 +57,21 @@ ts.plot(type_plot='rates')
 Which gives the following plot :
 
 ![](img/plot.png)
+![](img/plot2.png)
 
+```shell
+ts.statistics()
+```
+
+Which gives the following table :
+![](img/statistic.png)
+
+```shell
+ts.correlation()
+```
+
+Which gives the following table :
+![](img/correlation.png)
 
 
 ### Economic scenario generator abstract class
