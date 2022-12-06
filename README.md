@@ -55,7 +55,7 @@ ts.plot(type_plot='rates')
 ```
 
 Which gives the following plot :
-![](/https://github.com/bashog/EconomicScenariosGenerator/blob/17fe617b7be20e8b5122e5c0d64efeb091598669/Capture d’écran 2022-12-06 à 18.32.14.png)
+![](img/plot.PNG)
 
 
 ### Economic scenario generator abstract class
