@@ -85,6 +85,8 @@ ts.bootstrap_esg(scenarios=scenarios, test_date=test_dates, plot_from=plot_from)
 ```
 Which gives us for the USD currency : 
 ![](img/usd.PNG)
+![](img/corr.PNG)
+
 
 
 
