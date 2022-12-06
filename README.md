@@ -30,16 +30,18 @@ Through a GSS we could simulate this variable by being consistent with its past 
 
 
 ### Restricted Boltzman Machine
-#RBM method
+#### RBM method
 A Restricted Boltzmann Machine is a two-layer network with stochastic activation units. Restricted means that there is no connection between units whithin the same layer. The layer which is exposed to the training data set is called the visible layer. Inputs from the visible layer flow through the network (forward pass) to the hidden layer.
 
 Each hidden unit then ”fires” randomly − its output is a Bernoulli random variable: ”1” is generated with probability p, which is equal to the sigmoid activation function value, and ”0” is generated with probability 1 − p. The outputs from the hidden layer then flow back (backward pass) to the visible layer, where they are aggregated and added to the visible layer biases.
 
 The network learns the joint distribution of the configurations of visible and hidden activation units by trying to reconstruct the inputs from the training data set (visible unit values) by finding an optimal set of the network weights and biases
 
-Here is a schema to visualize hidden and visible units.
+Here is a schema to visualize hidden and visible units :
 
-#Code Structure
+<img width="404" alt="Capture d'écran_20221113_181203" src="https://user-images.githubusercontent.com/119663180/205937600-e31cb887-f52e-434c-bfd0-431dac77804e.png">
+
+#### Code Structure
 The RBM class gathers all the functions that allow to realize the model : 
 
 - The __init__ function :  Initialise the RBM class with the ESG abstract class avec comme entrée les données encodées 
@@ -58,7 +60,7 @@ The RBM class gathers all the functions that allow to realize the model :
 
 - The generate function: allows to generate new data with the thermalization method which is based on the generation of new data. For each scenario, we take a random vector already trained on the previous weights and biases then we pass it K times (K represents the thermalization factor) in the forwards and backwards passes to be able to generate new data different from the historical ones.  
 
-#Results
+#### Results
 Here are the results of the qq-plot :
 
 <img width="474" alt="bnp" src="https://user-images.githubusercontent.com/119663180/205840023-6dcba43f-112b-4f91-98c7-f5e75625d41e.png">
