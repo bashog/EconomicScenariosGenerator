@@ -8,13 +8,13 @@ An ESG consists of a set of models (interest rates, equities, asset yields, cred
 
 ## Project motivations and purposes
 
+After the financial crisis of 2008, states realized that economic risks could represent a threat to the community. As a result, stricter measures have been imposed on banks and insurance companies in terms of regulation and economic conduct. Among these measures we cite a better management of risks by modeling its factors. This project  aims to analyze and forecast the exchange rate as our main risk factor.  
+
+Through an ESG we could simulate this variable by being consistent with its past evolutions, i.e. with the dynamics associated with it but also with the evolution of the dependency structure. Parametric or non-parametric methods like bootstrapping can be used, as well as generative machine learning models. 
+
 During the project, we will work on exchange rate returns from past years and then use different methods for generating economic scenarios :
 - Bootstrapping
 - Restricted Boltzmann Machine (RBM)
-
-After the financial crisis of 2008, states realized that economic risks could represent a threat to the community. As a result, stricter measures have been imposed on banks and insurance companies in terms of regulation and economic conduct. Among these measures we cite a better management of risks by modeling its factors. This project  aims to analyze and forecast the exchange rate as our main risk factor.  
-
-Through an ESG we could simulate this variable by being consistent with its past evolutions, i.e. with the dynamics associated with it but also with the evolution of the dependency structure. Parametric or non-parametric methods like bootstrapping can be used, as well as generative machine learning models.  
 
 ## Structure of the code
 This repository contains an abstract mother class for generating economic scenarios, as well as two child classes that inherit from the mother class: a `Bootstrap` class and a Restricted Boltzmann Machine `RBM` class.
@@ -43,6 +43,37 @@ The Time series class defines 7 functions that we will use on the source data to
 - bootstrap_esg : generate the bootstrap samples ;
  - rbm_esg : generate the rbm samples.
 It is the class called to generate results in our notebook.
+
+#### Example 
+
+```shell
+symbols = ['USD', 'JPY', 'GBP', 'CAD']  
+random.seed(14021999)
+ts = TimeSeries(dftaux, symbols)
+ts.pre_processing(method_return='arithmetic')
+ts.plot(type_plot='rates')
+```
+
+Which gives the following plot :
+
+![](img/plot.png)
+![](img/plot2.png)
+
+```shell
+ts.statistics()
+```
+
+Which gives the following table :
+
+![](img/statistic.png)
+
+```shell
+ts.correlation()
+```
+
+Which gives the following table :
+
+![](img/correlation.png)
 
 
 ### Economic scenario generator abstract class
