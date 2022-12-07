@@ -132,16 +132,19 @@ ts.rbm_esg(scenarios, epochs, lr, K, test_dates, plot_from, windows, parallel=Tr
 ```
 
 **The QQ plot to compare the real data and the output of the RBM :**
-![](img/quantiles_rbm.PNG)
+![](img/quantiles_rbm.png)
 
-** The correlation matrix of the output of the RBM :**
-![](img/corr_output.PNG)
+**The correlation matrix of the output of the RBM :**
+
+![](img/corr_output.png)
 
 **The correlation matrix of the generated scenarios :**
-![](img/corr_generated.PNG)
 
-** The quantiles of the generated scenarios compared with the historical quantiles:**
-![](img/quantiles_rbm.PNG)
+![](img/corr_generated.png)
+
+**The quantiles of the generated scenarios compared with the historical quantiles:**
+
+![](img/quantiles_rbm.png)
 
 
 
