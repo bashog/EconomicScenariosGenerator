@@ -99,9 +99,11 @@ ts.bootstrap_esg(scenarios=scenarios, test_date=test_dates, plot_from=plot_from)
 ### Restricted Boltzmann Machine
 > The implementation is based on the paper [The Market Generator](https://dx.doi.org/10.2139/ssrn.3384948) by Alexei Kondratyev, Christian Schwarz.
 
-<span style="color:red">A Restricted Boltzmann Machine is a two-layer network with stochastic activation units. Restricted means that there is no connection between units whithin the same layer. The layer which is exposed to the training data set is called the visible layer. Inputs from the visible layer flow through the network (forward pass) to the hidden layer.
-Each hidden unit then ”fires” randomly − its output is a Bernoulli random variable: ”1” is generated with probability p, which is equal to the sigmoid activation function value, and ”0” is generated with probability 1 − p. The outputs from the hidden layer then flow back (backward pass) to the visible layer, where they are aggregated and added to the visible layer biases.
-The network learns the joint distribution of the configurations of visible and hidden activation units by trying to reconstruct the inputs from the training data set (visible unit values) by finding an optimal set of the network weights and biases</span>
+<span style="color:red">A restricted Boltzmann machine is a type of artificial neural network for unsupervised learning : a two layer network with stochastic activation units. The ‘Restricted’ term refers to the absence of connections between units in the same layer. But how does it work ?   
+
+The first layer that receives the data is called the visible and the second is the hidden one and the nodes or the units are where calculations take place. Once received, the visible units transmit the input to the hidden layer (through the forward pass) which gives a random bernoulli variable as an output : the value "1" corresponds to the probability p which is equal to the sigmoid activation function and "0" corresponds to the probability 1-p. Then through the backward pass, the output obtained is combined using the weights and added to the biased values of the visible part. 
+
+Thus, the initial data is reconstructed by updating weights and biases and the features of the joint distribution of visible and hidden nodes are exctracted. </span>
 
 > More explanation are in the notebook
 
@@ -116,9 +118,10 @@ The RBM class gathers all the functions that allow to realize the model :
 - `unpack_data`: transforms numpy to dataframe;
 - `pre_processing`: It takes the real data and encode it into binary by setting the min and max values used also for the encoding and It initialises the weights and biases;
 - `qq_plot`: it draws the QQ plot for each variable to compare the real data and the generated data;
-- `train`: it is the training function of the data with the k contrastive divergence method. For each batch among each of the epochs, weights are updated by using the gradient descent method.
-- `train` : it is the training function of the data with the k contrastive divergence method. For each batch among each of the epochs, weights and biases are updated by using the gradient descent method.
-- `generate_scenarios`: allows to generate new data with the thermalization method which is based on the generation of new data. For each scenario, we take a random vector already trained on the previous weights and biases then we pass it K times (K represents the thermalization factor) in the forwards and backwards passes to be able to generate new data different from the historical ones.  
+- `mse`: Calculates the mean square error between two arrays of real data;
+- `plot_mse` : plots the mse output;
+- `train` : it is the training function of the data with the k contrastive divergence method. For each batch among each of the epochs, weights and biases are updated by using the gradient descent method;
+- `generate_scenarios`: allows to generate new data with the thermalization method which is based on the generation of new data. For each scenario, we take a random vector already trained on the previous weights and biases then we pass it K times (K represents the thermalization factor) in the forwards and backwards passes to be able to generate new data different from the historical ones;  
 
 ```python	
 test_dates = '2021-09-04'
@@ -153,5 +156,6 @@ ts.rbm_esg(scenarios, epochs, lr, K, test_dates, plot_from, windows, parallel=Tr
 - Simon Evanno alias @Simzer994
 - Viviane Feng alias @vivianefeng
 - Basma Bazi alias @basmabazi
+- Khaoula Lamtouni @Klamtouni
 
 
