@@ -1,6 +1,8 @@
 ### Virtual environment ###
 .venv
 
+.DS_Store
+
 ### VisualStudioCode ###
 .vscode/*
 
