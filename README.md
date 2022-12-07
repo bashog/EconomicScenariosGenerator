@@ -156,6 +156,6 @@ ts.rbm_esg(scenarios, epochs, lr, K, test_dates, plot_from, windows, parallel=Tr
 - Simon Evanno alias @Simzer994
 - Viviane Feng alias @vivianefeng
 - Basma Bazi alias @basmabazi
-- Khaoula Lamtouni @Klamtouni
+- Khaoula Lamtouni alias @Klamtouni
 
 
