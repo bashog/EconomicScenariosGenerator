@@ -3,6 +3,7 @@ import datetime
 import random
 from matplotlib import pyplot as plt
 from esg import ESG
+import time
 
 class Bootstrap(ESG):
   ''' 
@@ -25,11 +26,14 @@ class Bootstrap(ESG):
     Generate scenarios based on the train set between the start date and the test date 
     '''
     self.output = []
+    start = time.time()
     for i in range(self.scenarios):
       samples = self.data_train.sample(n=len(self.data_train), replace=True)
       samples.columns = [str(col) + f'_{i}' for col in self.columns]
       samples.index = self.data_train.index
       self.output.append(samples)
+    end = time.time()
+    self.time_train = end - start
 
   def generate(self):
     ''' 
@@ -37,9 +41,12 @@ class Bootstrap(ESG):
     and concatenate the train and test set 
     '''
     self.generated_samples = []
+    start = time.time()
     for i in range(self.scenarios):
       samples = self.data_train.sample(n=len(self.data_test), replace=True)
       samples.columns = [str(col) + f'_{i}' for col in self.columns]
       samples.index = self.data_test.index
       samples = pd.concat([self.output[i], samples], axis=0)
       self.generated_samples.append(samples)   
+    end = time.time()
+    self.time_generate = end - start

@@ -139,10 +139,10 @@ class TimeSeries:
     self.bts.generate()
     self.bts.correlation()
     self.bts.plot_returns(plot_from, windows)
-  
+    print(self.bts.performance())
+    
 
   def rbm_esg(self, scenarios:int, epochs:int, lr:float, K:int, test_date, plot_from:str, windows=10, frequency="daily", parallel=True):
-
     '''Generate RBM samples'''
     if frequency == 'daily':
       self.rbm = RBM(self.returns, test_date, scenarios)
@@ -160,5 +160,13 @@ class TimeSeries:
     self.rbm.plot_returns(plot_from, windows)
     self.rbm.plot_coumpound_returns(plot_from, self.data, self.method_return)
     self.rbm.plot_mse()
+    print(self.rbm.performance())
+
+    
+  def performance(self):
+    '''Return the performance of the RBM and the bootstrap'''
+    perf_bts = self.bts.performance()
+    perf_rbm = self.rbm.performance()
+    return pd.concat([perf_bts, perf_rbm], axis=1)
 
 

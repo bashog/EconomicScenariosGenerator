@@ -4,6 +4,7 @@ warnings.filterwarnings("ignore")
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+import math
 
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -102,11 +103,13 @@ class RBM(ESG):
         self.b = np.zeros(self.n_hidden)
         self.W = np.random.normal(loc=0, scale=0.01, size=(self.n_visible, self.n_hidden))
         print('Pre-processing done')
-
+    
+    def performance(self):
+        return super().performance()
     
     def qq_plot(self):
         '''QQ plot for each variable comparing the real data and the generated data'''
-        fig, axes = plt.subplots(self.ncols//2 + 1, 2, figsize=(5*self.ncols, 5*self.ncols))
+        fig, axes = plt.subplots(math.ceil(self.ncols/2), 2, figsize=(5*self.ncols, 5*self.ncols))
         for i, col in enumerate(self.columns):
             pp_array1 = sm.ProbPlot(self.data.iloc[:,i])
             pp_array2 = sm.ProbPlot(self.output.iloc[:,i])
@@ -158,6 +161,7 @@ class RBM(ESG):
         n_batchs = len(batchs)
 
         t = trange(epochs, leave=True)
+        start = time.time()
         for epoch in t: # thermalisation  
 
             batch = batchs[epoch % n_batchs]
@@ -188,6 +192,9 @@ class RBM(ESG):
             self.mse_abW[0].append(self.mse_a)
             self.mse_abW[1].append(self.mse_b)
             self.mse_abW[2].append(self.mse_W)
+            
+        end = time.time()
+        self.time_train = end - start
 
         self.output = None
         for elt in self.input: # take the output of the RBM and decode it into real data and plot the QQ plot to compare the real data and the output
@@ -231,6 +238,7 @@ class RBM(ESG):
                 self.generated_samples.append(thermalisation_sampling(K, n_samples, self.prob_a, self.W, self.b, self.a))
 
         end = time.time()
+        self.time_generate = end - start
         print('Time to generate the data: {}s'.format(end-start))               
 
                

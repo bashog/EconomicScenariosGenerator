@@ -57,6 +57,8 @@ class ESG(ABC):
         scenarios: int
             The number of scenarios to be generated
         '''
+        self.name = self.__class__.__name__
+        
         self.data = data
         self.index = data.index
         self.columns = data.columns
@@ -72,6 +74,9 @@ class ESG(ABC):
         self.generated_samples = None # list of generated samples
         self.all_quantiles = None # list of quantiles of the generated data for each asset
         self.corr = None # correlation matrix of the generated data
+        
+        self.time_train = None
+        self.time_generate = None
  
 
     @abstractmethod
@@ -80,8 +85,16 @@ class ESG(ABC):
         Pre-processing of the data to implement in the inherited class 
         '''
         pass
-
-
+    
+    def performance(self):
+        ''' 
+        Performance of the model during the training and the generation
+        '''
+        perf = pd.DataFrame(index=['train', 'generate'], columns=[self.name])
+        perf.loc['train',] = [self.time_train]
+        perf.loc['generate',] = [self.time_generate]
+        return perf
+        
     @abstractmethod
     def train(self):
         ''' 
