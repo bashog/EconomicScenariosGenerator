@@ -10,7 +10,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import time
 from tqdm import tqdm, trange
-from utils import thermalisation_sampling
+from utils import thermalisation_sampling, thermalisation_sampling_numba
 
 from multiprocessing import Pool, cpu_count, Process
 
@@ -214,7 +214,7 @@ class RBM(ESG):
         print('Train done')
 
     
-    def generate(self, K=1000, parallel=False):
+    def generate(self, K=1000, parallel=False, numba=False):
         '''
         Generate new data
 
@@ -230,12 +230,18 @@ class RBM(ESG):
             start = time.time()
             # parallelisation of the thermalisation sampling method to generate self.scenarios new data            
             with Pool(processes=cpu_count()) as pool:
-                self.generated_samples = pool.starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
+                if numba:
+                    self.generated_samples = pool.starmap(thermalisation_sampling_numba, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
+                else:
+                    self.generated_samples = pool.starmap(thermalisation_sampling, [(K, n_samples, self.prob_a, self.W, self.b, self.a) for _ in range(self.scenarios)])
 
         else:
             start = time.time()
             for _ in trange(self.scenarios):
-                self.generated_samples.append(thermalisation_sampling(K, n_samples, self.prob_a, self.W, self.b, self.a))
+                if numba:
+                    self.generated_samples.append(thermalisation_sampling_numba(K, n_samples, self.prob_a, self.W, self.b, self.a))
+                else:
+                    self.generated_samples.append(thermalisation_sampling(K, n_samples, self.prob_a, self.W, self.b, self.a))
 
         end = time.time()
         self.time_generate = end - start
