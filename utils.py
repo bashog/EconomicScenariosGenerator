@@ -5,6 +5,7 @@ import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from tqdm import trange
+import numba
 
 ### About returns ###
 def get_returns(prices:pd.DataFrame, method_return:str, keep_extreme_value:bool):
@@ -42,13 +43,17 @@ def coumpound_quantiles(quantiles:pd.DataFrame,  prices:pd.DataFrame, method_ret
 
     return cum_quantiles
 
-## About geneeration of samples ##
+## About the sigmoid function ##
+def sigmoid(x):
+    ''' Sigmoid function '''
+    return 1/(1+np.exp(-x))
+
+## About generation of samples without numba ##
 def thermalisation_sampling(K, n_samples, prob_a, W, b, a):
     '''
     Thermalisation sampling method to generate new data
     It takes the precendent value and thermalise it for K steps
     '''
-    sigmoid = lambda x: 1/(1+np.exp(-x))
     generated_samples_i = None
     v = np.random.binomial(1, prob_a)
     for _ in range(n_samples):
@@ -60,6 +65,23 @@ def thermalisation_sampling(K, n_samples, prob_a, W, b, a):
         generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0) if generated_samples_i is not None else np.array([v])
     return generated_samples_i   
 
+## About generation of samples with numba##
+@numba.jit
+def thermalisation_sampling_numba(K, n_samples, prob_a, W, b, a):
+    '''
+    Thermalisation sampling method to generate new data
+    It takes the precendent value and thermalise it for K steps
+    '''
+    generated_samples_i = None
+    v = np.random.binomial(1, prob_a)
+    for _ in range(n_samples):
+        for _ in range(K):
+            h = sigmoid(np.dot(v, W) + b)
+            h = np.random.binomial(1, h)
+            v = sigmoid(np.dot(h, W.T) + a)
+            v = np.random.binomial(1, v)
+        generated_samples_i = np.concatenate((generated_samples_i, np.array([v])), axis=0) if generated_samples_i is not None else np.array([v])
+    return generated_samples_i   
 
 
 ### To plot ###
