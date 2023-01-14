@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from tqdm import trange
 import numba
+import yfinance as yf
 
 ### About returns ###
 def get_returns(prices:pd.DataFrame, method_return:str, keep_extreme_value:bool):
@@ -223,3 +224,22 @@ def plot_coumpound_quantiles_esg(prices, all_quantiles, test_date, plot_from, me
        
     plt.show()   
 
+
+def collect_stocks(assets: list):
+    """ Download the stocks data from yahoo finance and save it in a csv file, each stock is a csv file"""
+
+    # download the data for each ticker
+    for asset in assets:
+
+        # use yahoo finance to download prices data
+        ticker = yf.Ticker(asset)
+        data = ticker.history(period='max')
+
+        # keep only the close price
+        data = data['Close']
+
+        # save it in a csv file
+        file_path = './datas/'+asset+'.csv'
+        data.to_csv(file_path)
+
+    return None
