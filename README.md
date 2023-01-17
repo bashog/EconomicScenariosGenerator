@@ -73,7 +73,9 @@ ts.correlation()
 
 
 ### Bootstrap class
-The bootstrap method is a statistical procedure that resamples a timeseries to create many simulated samples. The importance of this method is to keep the correlation between the different currencies. 
+Bootstrapping is a statistical technique that resamples a particular dataset to produce a large number of simulated samples. Time series with correlated sample data are frequently used as economic data. 
+
+The mean, for example, is unique to each simulated sample. At the end of the process, your simulated datasets contain numerous unique combinations of the original dataset's values.The importance of this method is to keep the correlation between the different currencies. 
 
 The Bootstrap class defines 3 functions that we will use to generate scenarios :
 - `__init__` : initialize the class and keep the data needed;
