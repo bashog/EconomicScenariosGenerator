@@ -37,6 +37,8 @@ class RBM(ESG):
         self.mse_W = None
         self.mse_abW = [[],[],[]]
 
+
+        self.mape_abW = [[],[],[]]
     
     def encoding(self, array_real:np.array):
         '''
@@ -206,10 +208,6 @@ class RBM(ESG):
             self.mse_abW[2].append(self.mse_W)
             
         end = time.time()
-
-        print(f"Mape of a: {self.mape(v0,v)}%")
-        print(f"Mape of b: {self.mape(h0,h)}%")
-        print(f"Mape of W: {self.mape(np.outer(v0,positive_grad), np.outer(v,negative_grad))}%")
 
         self.time_train = end - start
 

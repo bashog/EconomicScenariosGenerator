@@ -159,7 +159,6 @@ class TimeSeries:
     self.rbm.correlation(corr_of='generated')
     self.rbm.plot_returns(plot_from, windows)
     self.rbm.plot_coumpound_returns(plot_from, self.data, self.method_return)
-    self.rbm.plot_mse()
     print(self.rbm.performance())
 
     
