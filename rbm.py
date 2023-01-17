@@ -129,6 +129,18 @@ class RBM(ESG):
         return np.mean((array1 - array2) ** 2)
     
 
+    def mape(self, array1:np.array, array2:np.array):
+        ''' 
+        Calculate the mean absolute percentage error between two arrays of real data
+        Parameters:
+            array1 (np.array)
+            array2 (np.array)
+        Returns:
+            mape (float)
+        '''
+        return np.mean(np.abs((array1 - array2)/array1 * 100))
+    
+
     def plot_mse(self):
         '''Plot the mse'''
         plt.figure(figsize=(15,6))
@@ -194,6 +206,11 @@ class RBM(ESG):
             self.mse_abW[2].append(self.mse_W)
             
         end = time.time()
+
+        print(f"Mape of a: {self.mape(v0,v)}%")
+        print(f"Mape of b: {self.mape(h0,h)}%")
+        print(f"Mape of W: {self.mape(np.outer(v0,positive_grad), np.outer(v,negative_grad))}%")
+
         self.time_train = end - start
 
         self.output = None
